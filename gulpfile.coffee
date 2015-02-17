@@ -1,4 +1,11 @@
 gulp = require('gulp')
+sass = require('gulp-sass')
+connect = require('gulp-connect')
+
+gulp.task 'server', () ->
+  connect.server
+    root:'dist'
+    livereload:true
 
 gulp.task 'hello', () ->
   console.log "hello"
@@ -7,6 +14,7 @@ gulp.task 'hello', () ->
 gulp.task 'copy-index', () ->
   gulp.src 'index.html'
       .pipe(gulp.dest('dist'))
+      .pipe(connect.reload())
 
 # 复制images下面的所有格式为jpg的图片
 gulp.task 'images', () ->
@@ -32,5 +40,19 @@ gulp.task 'data', () ->
 gulp.task 'bulid', ['hello', 'images', 'data'], () ->
   console.log "all do"
 
+# 监视对应文件，有变动则执行对应任务
+gulp.task 'watch', () ->
+  gulp.watch 'index.html', ['copy-index']
+  gulp.watch 'images/**/*.{jpg,gif}', ['images']
+  gulp.watch ['xml/*.xml', 'json/*.json', '!json.select-*.json'], ['data']
 
+
+# 使用sass插件变异scss文件生成css，移动到对应文件夹
+gulp.task 'sass', () ->
+  gulp.src 'stylesheets/**/*.scss'
+      .pipe(sass())
+      .pipe(gulp.dest('dist/css'))
+
+# 使用gulp命令直接执行这些任务
+gulp.task 'default', ['server', 'watch']
 
