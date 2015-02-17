@@ -1,6 +1,20 @@
 gulp = require('gulp')
 sass = require('gulp-sass')
 connect = require('gulp-connect')
+concat = require('gulp-concat')
+uglify = require('gulp-uglify')
+rename = require("gulp-rename");
+imagemin = require('gulp-imagemin')
+
+# 将01，02 合并为vendor.js, 然后输出，然后压缩，然后重命名，然后输出
+gulp.task 'script', () ->
+  gulp.src ['javascripts/01.js', 'javascripts/02.js']
+      .pipe(concat('vendor.js'))
+      .pipe(gulp.dest('dist/js'))
+      .pipe(uglify())
+      .pipe(rename('vendor.min.js'))
+      .pipe(gulp.dest('dist/js'))
+
 
 gulp.task 'server', () ->
   connect.server
@@ -28,6 +42,7 @@ gulp.task 'images', () ->
 # 复制多个扩展名图片，注意逗号后面不能够有空格
 gulp.task 'image-extend', () ->
   gulp.src 'images/*.{jpg,gif}'
+      .pipe(imagemin())
       .pipe(gulp.dest('dist/images'))
 
 # 复制多个目录下面的文件到某个目录, !json/select-*.json 为要排除的文件，前面加‘!’
