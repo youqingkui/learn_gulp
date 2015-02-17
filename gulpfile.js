@@ -9,7 +9,23 @@
   });
 
   gulp.task('copy-index', function() {
-    return gulp.src('npm-debug.log').pipe(gulp.dest('dist'));
+    return gulp.src('index.html').pipe(gulp.dest('dist'));
+  });
+
+  gulp.task('images', function() {
+    return gulp.src('images/*.jpg').pipe(gulp.dest('dist/images'));
+  });
+
+  gulp.task('image-extend', function() {
+    return gulp.src('images/*.{jpg,gif}').pipe(gulp.dest('dist/images'));
+  });
+
+  gulp.task('data', function() {
+    return gulp.src(['xml/*.xml', 'json/*.json', '!json/select-*.json']).pipe(gulp.dest('dist/data'));
+  });
+
+  gulp.task('bulid', ['hello', 'images', 'data'], function() {
+    return console.log("all do");
   });
 
 }).call(this);
